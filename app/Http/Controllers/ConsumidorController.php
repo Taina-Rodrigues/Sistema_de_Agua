@@ -39,7 +39,7 @@ class ConsumidorController extends Controller
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'endereco' => 'required|string|max:255',
-            'numero_medidor' => ['required', 'string', Rule::unique('consumidors', 'numero_medidor')],
+            'numero_medidor' => ['required', 'string', Rule::unique('consumidores', 'numero_medidor')],
             'telefone' => 'required|string|max:20',
         ], [
             'numero_medidor.unique' => 'Este número de medidor já está cadastrado.'
@@ -87,7 +87,7 @@ class ConsumidorController extends Controller
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'endereco' => 'required|string|max:255',
-            'numero_medidor' => ['required', 'string', Rule::unique('consumidors', 'numero_medidor')->ignore($consumidor->id)],
+            'numero_medidor' => ['required', 'string', Rule::unique('consumidores', 'numero_medidor')->ignore($consumidor->id)],
             'telefone' => 'required|string|max:20',
         ], [
             'numero_medidor.unique' => 'Este número de medidor já está cadastrado.'

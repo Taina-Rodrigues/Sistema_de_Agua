@@ -10,6 +10,8 @@ class Consumidor extends Model
 {
     use HasFactory;
 
+    protected $table = 'consumidores';
+
     protected $fillable = [
         'nome',
         'endereco',
@@ -51,7 +53,7 @@ class Consumidor extends Model
      */
     public function isAtivo(): bool
     {
-        return $this->status === 'ativo';
+        return true;
     }
 
     /**

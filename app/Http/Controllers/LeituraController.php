@@ -54,7 +54,7 @@ class LeituraController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'consumidor_id' => 'required|integer|exists:consumidors,id',
+            'consumidor_id' => 'required|integer|exists:consumidores,id',
             'mes' => 'required|digits:2',
             'ano' => 'required|digits:4|integer',
             'leitura_atual' => 'required|numeric|min:0',
@@ -141,7 +141,7 @@ class LeituraController extends Controller
     public function edit(string $id)
     {
         $leitura = Leitura::findOrFail($id);
-        $consumidores = Consumidor::where('status', 'ativo')->get();
+        $consumidores = Consumidor::orderBy('nome')->get();
 
         return view('leituras.edit', [
             'title' => 'Editar leitura',
