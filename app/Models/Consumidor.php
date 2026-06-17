@@ -15,12 +15,9 @@ class Consumidor extends Model
         'endereco',
         'numero_medidor',
         'telefone',
-        'leitura_inicial',
-        'status',
     ];
 
     protected $casts = [
-        'leitura_inicial' => 'float',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
