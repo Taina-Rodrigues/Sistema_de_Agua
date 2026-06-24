@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
+            \App\Http\Middleware\AuditMiddleware::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
