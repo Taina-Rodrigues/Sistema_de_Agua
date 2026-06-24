@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -25,7 +27,18 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
+        $throttleKey = $this->throttleKey($request);
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => 'Muitas tentativas de login. Tente novamente em ' . ceil($seconds / 60) . ' minuto(s).']);
+        }
+
         if (Auth::attempt($credentials)) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
             $user = Auth::user();
 
@@ -39,6 +52,11 @@ class AuthController extends Controller
         return back()
             ->withInput($request->only('email'))
             ->withErrors(['email' => 'As credenciais fornecidas estão incorretas.']);
+    }
+
+    private function throttleKey(Request $request): string
+    {
+        return Str::lower($request->input('email')).'|'.$request->ip();
     }
 
     /**
