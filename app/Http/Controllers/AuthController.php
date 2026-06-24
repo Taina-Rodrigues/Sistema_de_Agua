@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -24,15 +25,14 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        // Simulação de autenticação - implementar com Auth::attempt()
-        if ($credentials['email'] && $credentials['password']) {
-            session(['user' => [
-                'id' => 1,
-                'name' => 'Gestor Sistema',
-                'email' => $credentials['email'],
-                'role' => 'gestor'
-            ]]);
-            
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            $user = Auth::user();
+
+            if ($user->role === 'leiturista') {
+                return redirect()->route('leiturista.dashboard');
+            }
+
             return redirect()->route('dashboard');
         }
 
@@ -46,8 +46,10 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        session()->flush();
-        
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('login.show');
     }
 }
